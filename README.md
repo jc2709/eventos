@@ -4,9 +4,11 @@ Laboratorio educativo de **arquitectura orientada a eventos**. Permite crear ped
 
 [Descargar la guía explicativa en Word](docs/Guia_proyecto_Aula_EDA.docx) · Arquitectura, instalación, ejercicios y respuestas.
 
+[Abrir el laboratorio online en Vercel](https://eventos-six-liart.vercel.app/) · Cada navegador conserva una práctica independiente.
+
 ## Ejecutar
 
-El proyecto también incluye una versión online lista para Vercel. Conserva el motor EDA en Python y guarda una sesión independiente por navegador. Consulta [cómo funciona el despliegue](docs/Despliegue_Vercel.md). Las instrucciones siguientes corresponden a la versión local con SQLite en disco.
+El proyecto también incluye una versión online desplegada en Vercel. Conserva el motor EDA en Python y guarda una sesión independiente por navegador. Consulta [cómo funciona el despliegue](docs/Despliegue_Vercel.md). Las instrucciones siguientes corresponden a la versión local con SQLite en disco.
 
 Requisito: **Python 3.10 o superior**. No requiere paquetes adicionales, Docker, cuenta de pago ni conexión a Internet durante la ejecución.
 
@@ -77,9 +79,10 @@ docs/                   Explicación y ejercicios del proyecto
 
 ```bash
 python -m unittest discover -s tests -v
+node --test tests/test_runtime.cjs
 ```
 
-Las 19 pruebas verifican publicación asíncrona, reservas, rechazo por stock, correlación entre pedidos, inversión del orden de consumo, pago duplicado, aislamiento de fallos, rollback de efectos, recuperación tras reinicio, validación y reinicio de la práctica. También comprueban el flujo entre invocaciones online y la independencia de las sesiones de los alumnos. GitHub Actions ejecuta el mismo comando.
+Las 19 pruebas Python verifican publicación asíncrona, reservas, rechazo por stock, correlación entre pedidos, inversión del orden de consumo, pago duplicado, aislamiento de fallos, rollback de efectos, recuperación tras reinicio, validación y reinicio de la práctica. También comprueban el flujo entre invocaciones online y la independencia de las sesiones de los alumnos. Las 3 pruebas Node verifican el adaptador del navegador, la recuperación al recargar y el manejo del almacenamiento. GitHub Actions ejecuta ambos comandos; Node 22 solo es necesario para estas pruebas del adaptador.
 
 ## Alcance
 

@@ -1,5 +1,7 @@
 # Aula EDA en Vercel
 
+Laboratorio publicado: **https://eventos-six-liart.vercel.app/**. Proyecto `eventos`, conectado al repositorio `jc2709/eventos` y a su rama `main`.
+
 La versión online conserva el mismo motor Python de `eda/application.py`, `eda/broker.py` y `eda/consumers.py`. `api/lab.py` adapta la ejecución a una Vercel Function y `eda/cloud.py` permite continuar la práctica entre invocaciones.
 
 ## Sesiones de los alumnos
@@ -28,10 +30,11 @@ Este almacenamiento es adecuado para ejercicios con datos ficticios. No constitu
 
 ```bash
 python -m unittest discover -s tests -v
+node --test tests/test_runtime.cjs
 python scripts/build_vercel.py
 ```
 
-Se verifican 19 casos del motor local y del adaptador online. En la página publicada, crea un pedido, procesa una entrega, paga cuando esté reservado y completa las entregas. Recarga para comprobar la persistencia. Abre otra sesión de navegador para comprobar que no comparten inventario.
+Se verifican 19 casos Python del motor local y del adaptador online, y 3 casos Node del transporte del navegador (Node 22 para las pruebas). En la página publicada, crea un pedido, procesa una entrega, paga cuando esté reservado y completa las entregas. Recarga para comprobar la persistencia. Abre otra sesión de navegador para comprobar que no comparten inventario.
 
 La sesión se limita a 1 MB, 1000 registros por tabla y 5000 registros en total. Si alcanza un límite, la acción no sobrescribe el progreso anterior; reinicia el laboratorio para comenzar otra práctica.
 
