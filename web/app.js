@@ -2,29 +2,30 @@
 const $ = (id) => document.getElementById(id);
 const labels = {created:'Creado',reserved:'Reservado',paid:'Pagado',shipped:'Envío iniciado',rejected:'Rechazado',pending:'Pendiente',retry:'Reintento',failed:'Fallido',done:'Completado'};
 let state = null, selectedEvent = null, refreshing = false;
+const runtime = window.aulaRuntime;
 const escape = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const short = value => value.slice(0,8);
 const badge = status => `<span class="badge ${escape(status)}">${labels[status] || escape(status)}</span>`;
 function showError(message) { $('error').textContent = message; $('error').hidden = !message; }
 async function command(route, data = {}) {
   try {
-    const res = await fetch('/api/' + route, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    const value = await res.json();
-    if (!res.ok) throw new Error(value.error || 'No se pudo completar la operación');
+    const value = await runtime.command(route, data);
     showError('');
-    await refresh();
-    return value;
+    if (value.state) { state = value.state; render(); }
+    else await refresh();
+    return value.result;
   } catch (error) { showError(error.message); return null; }
 }
 async function refresh() {
   if (refreshing) return;
   refreshing = true;
   try {
-    const res = await fetch('/api/state');
-    if (!res.ok) throw new Error('No se pudo consultar el estado');
-    state = await res.json(); render();
+    await runtime.ready;
+    if (runtime.isCloud()) state = state ? await runtime.tick(state) : await runtime.initial();
+    else state = await runtime.initial();
+    render();
     if ($('error').textContent.startsWith('No se puede conectar')) showError('');
-  } catch { showError('No se puede conectar con el servidor. Comprueba que python server.py siga ejecutándose.'); }
+  } catch (error) { showError(runtime.isCloud() ? error.message : 'No se puede conectar con el servidor. Comprueba que python server.py siga ejecutándose.'); }
   finally { refreshing = false; }
 }
 function render() {
@@ -43,7 +44,7 @@ function render() {
   $('done-count').textContent = count(['done']);
   $('failed-count').textContent = count(['failed']);
   $('auto').textContent = state.settings.auto ? 'Pausar automático' : 'Activar automático';
-  $('mode').textContent = state.settings.auto ? 'Una entrega cada 0,6 s' : 'Modo paso a paso';
+  $('mode').textContent = state.settings.auto ? (runtime.isCloud() ? 'Procesamiento automático' : 'Una entrega cada 0,6 s') : 'Modo paso a paso';
   $('step').disabled = state.settings.auto || !count(['pending','retry']);
   $('retry').disabled = !count(['failed']);
   $('failure').checked = state.settings.fail_notifications;
@@ -79,3 +80,8 @@ $('failure').addEventListener('change', e => command('settings',{fail_notificati
 $('retry').addEventListener('click', () => command('retry'));
 $('reset').addEventListener('click', () => { if (confirm('¿Borrar pedidos, eventos y mensajes de este laboratorio y restaurar el stock?')) { selectedEvent = null; command('reset'); } });
 refresh(); setInterval(refresh,800);
+window.addEventListener('storage', async event => {
+  if (event.key !== 'aula-eda-session-v1' || !runtime.isCloud() || runtime.isBusy()) return;
+  try { state = await runtime.synchronize(); render(); }
+  catch (error) { showError(error.message); }
+});

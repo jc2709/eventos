@@ -6,6 +6,8 @@ Laboratorio educativo de **arquitectura orientada a eventos**. Permite crear ped
 
 ## Ejecutar
 
+El proyecto también incluye una versión online lista para Vercel. Conserva el motor EDA en Python y guarda una sesión independiente por navegador. Consulta [cómo funciona el despliegue](docs/Despliegue_Vercel.md). Las instrucciones siguientes corresponden a la versión local con SQLite en disco.
+
 Requisito: **Python 3.10 o superior**. No requiere paquetes adicionales, Docker, cuenta de pago ni conexión a Internet durante la ejecución.
 
 ```bash
@@ -77,7 +79,7 @@ docs/                   Explicación y ejercicios del proyecto
 python -m unittest discover -s tests -v
 ```
 
-Las pruebas verifican publicación asíncrona, reservas, rechazo por stock, correlación entre pedidos, inversión del orden de consumo, pago duplicado, aislamiento de fallos, rollback de efectos, recuperación tras reinicio, validación y reinicio de la práctica. GitHub Actions ejecuta el mismo comando.
+Las 19 pruebas verifican publicación asíncrona, reservas, rechazo por stock, correlación entre pedidos, inversión del orden de consumo, pago duplicado, aislamiento de fallos, rollback de efectos, recuperación tras reinicio, validación y reinicio de la práctica. También comprueban el flujo entre invocaciones online y la independencia de las sesiones de los alumnos. GitHub Actions ejecuta el mismo comando.
 
 ## Alcance
 
