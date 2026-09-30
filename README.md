@@ -2,6 +2,8 @@
 
 Laboratorio educativo de **arquitectura orientada a eventos**. Permite crear pedidos, observar la publicación y consumo de eventos, simular pagos, provocar fallos y recuperar entregas. La lógica EDA se ejecuta realmente en Python; la interfaz muestra el estado del broker persistido en SQLite.
 
+[Descargar la guía explicativa en Word](docs/Guia_proyecto_Aula_EDA.docx) · Arquitectura, instalación, ejercicios y respuestas.
+
 ## Ejecutar
 
 Requisito: **Python 3.10 o superior**. No requiere paquetes adicionales, Docker, cuenta de pago ni conexión a Internet durante la ejecución.
